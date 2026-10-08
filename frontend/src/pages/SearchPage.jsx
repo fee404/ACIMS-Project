@@ -106,9 +106,9 @@ const SearchPage = () => {
                 className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-700 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none cursor-pointer"
               >
                 <option value="">-- ทุกปีการศึกษา --</option>
-                <option value="2567">พ.ศ. 2567</option>
-                <option value="2566">พ.ศ. 2566</option>
-                <option value="2565">พ.ศ. 2565</option>
+                {Array.from({ length: 6 }, (_, i) => new Date().getFullYear() + 543 - i).map((y) => (
+                  <option key={y} value={y}>พ.ศ. {y}</option>
+                ))}
               </select>
             </div>
 

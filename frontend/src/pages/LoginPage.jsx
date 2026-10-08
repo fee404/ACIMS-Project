@@ -34,7 +34,11 @@ const LoginPage = () => {
         navigate('/my-works');
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+      if (!err.response) {
+        setError('ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ Backend (พอร์ต 5000) ได้ กรุณาตรวจสอบว่าเซิร์ฟเวอร์หลังบ้านกำลังทำงานอยู่');
+      } else {
+        setError(err.response.data?.message || 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+      }
     } finally {
       setLoading(false);
     }

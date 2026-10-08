@@ -62,11 +62,42 @@ const ProtectedLayout = ({ children, allowedRoles }) => {
   );
 };
 
+// คอมโพเนนต์นำทางอัตโนมัติตามสถานะการล็อกอินและบทบาทผู้ใช้งาน
+const RoleBasedHome = () => {
+  const { user, loading, activeRole } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 text-slate-400 text-xs">
+        กำลังโหลดระบบ...
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  const currentRole = activeRole || user.roles?.[0];
+  if (currentRole === 'department_head') {
+    return <Navigate to="/dashboard" replace />;
+  } else if (currentRole === 'curriculum_head') {
+    return <Navigate to="/review-works" replace />;
+  } else if (currentRole === 'admin') {
+    return <Navigate to="/manage-roles" replace />;
+  } else {
+    return <Navigate to="/my-works" replace />;
+  }
+};
+
 function App() {
   return (
     <AuthProvider>
       <Router>
         <Routes>
+          {/* Root Path: Smart Redirect */}
+          <Route path="/" element={<RoleBasedHome />} />
+
           {/* Public Route */}
           <Route path="/login" element={<LoginPage />} />
 
@@ -120,8 +151,8 @@ function App() {
             }
           />
 
-          {/* Default Redirect */}
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          {/* Default Fallback */}
+          <Route path="*" element={<RoleBasedHome />} />
         </Routes>
       </Router>
     </AuthProvider>
